@@ -3,9 +3,10 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Framework MVC</title>
+	<?=$helper->css('ed-grid')?>
 </head>
-<body>
+<body class="desarrollo">
 	<h1>Bienvenido al framework MVC</h1>
-	<span>Robert BJ HC</span>
+	<span>Filio Carrasco Sauñe</span>
 </body>
 </html>
