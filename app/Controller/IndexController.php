@@ -9,7 +9,11 @@
 		
 		public function index()
 		{
-			$this->view('Index');
+			$data = array(
+				'mensaje'		=>"",
+				'class_mensaje'	=> "error" //exito error
+			);
+			$this->view('Index', $data);
 		}
 		
 		/*	**	*/
