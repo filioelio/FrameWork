@@ -1,0 +1,36 @@
+.menu_img{
+	background: rgba(0,0,0,.9);
+	text-align: center;
+}
+.menu_img p,
+.menu_img span{
+	font-size: 1.2em;
+	text-align: center;
+	color: #F67707;
+}
+
+.base-1-3 p{
+	font-size: 1.4em;
+	color: #000;
+}
+.base-1-3 .user
+{
+	font-size: 1.5em;
+	color: #623903;
+}
+
+.base-1-3 p span{
+	color: #0065FD; 
+}
+
+#from_menu{
+	font-family: calibri !important;
+}
+
+#from_menu .caja span,
+#from_menu .caja h4,
+#from_menu .caja p {
+	font-size: 1.2em;
+
+}
+

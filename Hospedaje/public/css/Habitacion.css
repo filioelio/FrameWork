@@ -1,0 +1,184 @@
+/*DISEÑO DE FROMULARIO PARA USUARIORIO ADMINISTRADOR*/
+.form_admin{
+	padding: 1em;
+	width: 95%;
+	margin: 0 auto;
+	margin-top: 8em;
+	box-shadow: 0px 0px 15px rgba(0,0,0,.9);
+}
+.form_admin .caja .form_titulo
+{
+	font-family: algerian;
+	font-size: 2em;
+}
+
+#menu_lista
+{
+	margin-top: 5px;
+	color: #fff;
+	width: 100%;
+ 	list-style: none;
+ 	font-family: algerian; 	
+}
+#menu_lista ul  
+{
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+}
+
+#menu_lista ul li 
+{
+	width: 100%;
+/*	display: inline-block;*/
+	/*box-shadow: 0px 0px 10px rgba(10, 245, 219, 0.9) inset;*/
+	background: #3c8dbc;
+	font-size: 1.2em;
+	box-shadow: 0px 0px 15px rgba(51, 122, 183, 1) inset;
+	transition:all ease-in .5s;
+	margin:.5em;
+}
+
+#menu_lista ul .display
+{
+	display: inline-block;
+	width: 23%;
+}
+
+#menu_lista ul li a
+{
+	width: 100%;
+	display: inline-block;
+	padding: .5em;
+	color: #fff;
+}
+
+
+#menu_lista ul li:hover
+{
+	list-style: none;	
+	box-shadow: 15px 10em 15px rgba(243, 156, 18, 1) inset;
+	background: #EE7C0D;
+	color: #000;
+}
+
+/*DISEÑO DE FROMULARIO PARA USUARIORIOS NORMALES*/
+
+#form_habitacion{
+	margin-top: 1em;
+	border: 2px solid #8D8B88;
+	padding: 1em;
+	box-shadow: 0px 0px 10px rgba(0,0,0,.9);
+}
+
+#form_habitacion .menu_sub_nav{
+	box-shadow: 0px 1px 5px rgba(0,0,0,.9);
+	padding: .2em;
+	font-size: 1em;
+}
+#form_habitacion .menu_sub_nav div{
+	font-size: 1em;
+
+}
+
+
+#from_menu{
+	margin-top: 1em;
+	padding: .5em;
+	box-shadow: 0px 0px 5px rgba(0,0,0,.9);
+}
+#from_menu:hover{
+	background: rgba(0, 0, 0, .19);
+	transition: all ease-in .5s;
+
+}
+
+#from_menu .form_info{
+	font-family: "Times New Roman", Times, serif;
+	font-weight: bold;
+	font-variant: small-caps;
+}
+
+#from_menu .menu_titulo h2{
+	font-size: 1.5em;
+	/*font-family: algerian;*/
+	border-bottom: 2px solid rgba(0,0,0,.9);
+}
+
+#from_menu .menu_titulo span{
+	color: blue;
+	
+}
+
+
+#from_menu .menu_img{
+	padding: .3em;
+	box-shadow: 0px 0px 5px rgba(0,0,0,.9);
+}
+#from_menu .menu_img img{
+	box-shadow: 0px 0px 5px rgba(0,0,0,.9);
+}
+
+#from_menu .menu_descripcion h2{
+	text-align: center;
+}
+#from_menu .menu_descripcion h2, h4{
+	/*font-family: algerian;*/
+	padding: 0px;
+	font-size: 1.3em;
+}
+#from_menu .menu_descripcion h4 span{
+	font-family: arial;
+	color: red;
+}
+
+
+#from_menu .menu_lista
+{
+	margin-top: 5px;
+	color: #fff;
+	width: 100%;
+ 	list-style: none;
+ 	/*font-family: algerian; 	*/
+
+}
+#from_menu .menu_lista ul  
+{
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+#from_menu .menu_lista .menu_nav {
+	transition:all ease-in .5s;
+	padding: .2em;
+	box-shadow: 0px 0px 10px rgba(10, 245, 219, 0.9) inset;
+	margin:.5em 0;
+	padding: .5em;
+	background: green;
+	color: #fff;
+}
+#from_menu .menu_lista .menu_nav:hover
+{
+	list-style: none;	
+	box-shadow: 100em 0px 15px rgba(241, 104, 7, 0.9) inset;
+	background: #EE7C0D;
+	color: #000;
+	padding: .5em;
+}
+#from_menu .menu_lista .menu_nav .menu_nav_item{
+	padding: .5em;
+	font-size: 1em;
+}
+
+@media all and (max-width:400px){
+	#from_menu .menu_titulo h2{
+		font-size: 1em;
+		transition: all ease-in .5s;
+	}
+}
+
+
+
+

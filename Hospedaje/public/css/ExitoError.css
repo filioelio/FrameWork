@@ -1,0 +1,10 @@
+
+#exitoerror .formulario_exito{
+	color: #2A6911;
+	background: #9CCC95;
+}
+
+#exitoerror .formulario_error{
+	color: #F84A4A;
+	background: #F1C8C8;
+}

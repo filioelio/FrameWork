@@ -1,0 +1,19 @@
+
+
+html, body, #header {
+    height: 100%;
+    min-height: 100% !important;    
+}
+
+#header {
+	background:  url('../img/plaza.jpg') no-repeat center;
+	background-size: cover;
+	width: 100%;
+}
+
+.container_index {
+	background: rgba(0,0,0,.4);
+	color: #FFF;	
+	position: relative;
+	width: 100%;
+}

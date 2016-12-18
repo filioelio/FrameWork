@@ -1,0 +1,78 @@
+
+
+.menu-nav{
+	margin: 0 auto;
+	font-family: algerian;
+	/*background: #f39c12;*/
+	color: #fff;
+	font-size: 1.2em;
+	font-weight: bold;
+	/*box-shadow: 0px 0px 10px rgba(0,0,0,.9) inset;*/
+}
+
+.menu-nav a{
+	color: #fff !important;
+}
+.mnav_item{
+	border: 2px solid #fff;
+	background: #3c8dbc;/*#f39c12;*/
+	padding: .3em;
+	/*box-shadow: 0px 0px 15px rgba(84, 3, 26, 0.9) inset;*/
+	box-shadow: 0px 0px 15px rgba(102, 102, 102, 1) inset;
+	transition:all ease-in .3s;
+}
+
+.mnav_item:hover{
+	transition:all ease-in .5s;
+	/*rgba(241, 104, 7, 0.9)*/
+	box-shadow: 15px 50em 15px rgba(185, 32, 17, 0.9) inset;
+	padding: .3em;
+
+}
+
+.menu_nav_item{
+	cursor: pointer;
+	width: 100%;
+	color: #fff;
+	padding: .5em 0;
+	transition: all ease-out .5s;
+	text-transform: uppercase;
+}
+
+
+.main-footer{
+	background: rgba(0,0,0,.12) !important;
+}
+.menu_footer{
+	margin: 0 auto;
+	color: #000;
+}
+.menu_autor{
+	padding-top: 1em;
+	color: #fff;
+}
+.menu_sociales a{
+	border-radius: 50%;	
+	font-size: 1.3em;
+	color: #fff;
+	display: inline-block;
+	line-height: 2;
+	padding: 0 .5em;
+	transition: all ease-in .5s;
+}
+.icon-facebook:hover{
+	background: #3D5B99;
+	color: #fff;
+}
+.icon-twitter:hover{
+	background: #55ACEE; 
+	color: #fff;
+}
+.icon-whatsapp:hover{
+	background: #11EB26;
+	color: #fff; 
+}
+.icon-rss:hover{
+	background: #FFAA58; 
+	color: #fff;
+}

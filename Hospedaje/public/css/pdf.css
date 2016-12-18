@@ -1,0 +1,91 @@
+body {
+  font-family: "Times New Roman", serif;
+}
+
+.header_container{
+	width: 100%;
+	margin: 0 auto;
+	padding-top: 0px;
+}
+
+.header_container img{
+	width: 100%;
+	height: 60%;
+}
+
+.titulo_central {
+	margin-bottom: 1em;
+	border-bottom-width: 5px;
+}
+
+table {
+   margin-bottom: .5em;
+   width: 100%;
+}
+th, td {
+   text-align: left;
+   vertical-align: top;
+   border: .1px solid solid steelblue;
+   border-collapse: collapse;
+   padding: 0.3em;
+   caption-side: bottom;
+
+}
+caption {
+   padding: 0.3em; 
+   color: #fff;
+   background: #000;
+}
+
+#cabezera, #footer{
+	min-height: 5em;
+	background: steelblue;
+	color: #FFF;
+	font-weight: bolder;
+	text-shadow: 2px 2px 5px rgba(255,255,255,.3);
+	padding: .5em 0;
+}
+
+.img__home {
+	cursor: pointer;
+}
+
+.reporte__tabla {
+	width: 100%;
+}
+
+.tabla__titulos {
+	text-align: center;
+	font-weight: bold;
+	font-size: .8em;
+	text-transform: uppercase;
+	background: steelblue;
+	color: #FFF;
+	line-height: 1;
+}
+
+.tabla__items td {
+	color: steelblue;
+}
+
+.tabla__total td {
+	color: #FFF;
+}
+
+.tabla__total {
+	font-weight: bold;
+	font-size: .8em;
+	text-align: center;
+	background: steelblue;
+}
+
+.titulo__tabla {
+	color:steelblue;
+	font-weight: bold;
+	font-size: 1em;
+	text-transform: uppercase;
+	text-align: center;
+	border-bottom: 1px solid steelblue;
+	padding-bottom: .2em;
+	margin-bottom: 1em;
+}

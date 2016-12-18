@@ -1,0 +1,64 @@
+#checkbox label:after
+{
+	content: "¿Dar a Credito?"
+}
+#checkbox label {
+	display: inline-block;
+	cursor: pointer;
+	color: #3BDF52;
+	font-size: 1.5em;
+	position: relative;
+	padding: 1px 1px 1px 50px;
+	border-radius: 5px;
+	-webkit-transition: all 0.3s ease;
+	-o-transition: all 0.3s ease;
+	transition: all 0.3s ease; 
+}
+
+#checkbox label:before 
+{
+	content: "";
+	display: inline-block;      
+	 width: 25px;     
+	height: 25px;      
+	position: absolute;     
+	left: 15px;      
+	background: none;      
+	border: 3px solid #FF4136;             
+}
+#checkbox label:before 
+{
+	border-radius: 3px; 
+}
+#checkbox input[type="checkbox"]
+{
+	display: none; 
+}
+#checkbox input[type="checkbox"]:checked + label:before
+{
+	display: none; 
+}
+#checkbox input[type="checkbox"]:checked + label 
+{
+	background: #14291D;
+	-webkit-transition: all 1s ease;
+	-o-transition: all 1s ease;
+	transition: all 1s ease;
+	background: #dd4b39;
+	color: #fff;
+	padding: 5px;
+	-webkit-transition: all 1s ease;
+	-o-transition: all 1s ease;
+	transition: all 1s ease;
+	padding: 5px;
+
+ }
+#checkbox input[type="checkbox"]:checked + label:after {
+	content: "";
+	padding: 5px;
+	-webkit-transition: all 0.5s ease;
+	-o-transition: all 0.5s ease;
+	transition: all 0.5s ease;
+	padding: 5px inset;
+	content: "¿Esta Seguro de Fiar?";
+}
