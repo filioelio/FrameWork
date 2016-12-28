@@ -69,6 +69,7 @@ function Registrar_Venta(object, id, monto)
       {
         if (json.codigo) 
         {
+          setTimeout(finalizarventa,3000);
           console.log(json.mensaje);
           $('#mensaje').text(json.mensaje);
           $('#mensaje').css({'color': '#5AE40F'});
@@ -248,6 +249,12 @@ function mostrar(array)
   });
   $('.Eliminar_fila').on('click', function(){
       update_carrito(pro.getArrayList(), $(this).data('id'));
-  });
-  
+  }); 
 }
+
+function finalizarventa()
+{
+  window.location.reload();
+}
+
+

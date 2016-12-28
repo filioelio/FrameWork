@@ -11,6 +11,21 @@
 		public function __construct()
 		{}
 
+		public function SearchHospedaje($id_habi)
+		{
+			$a_hospedaje = new AHospedaje();
+			$hospedaje = $a_hospedaje->SearchHospedaje($id_habi);
+			if(isset($hospedaje) && (is_array($hospedaje) || is_object($hospedaje)))
+			{
+				if(is_object($hospedaje))
+				{
+					$hospedaje = array($hospedaje);
+				}
+				$hospedaje = $hospedaje;
+			}
+			return $hospedaje;
+		}
+
 		public function IngresoTotal($fecha)
 		{
 			$a_hospedaje = new AHospedaje();

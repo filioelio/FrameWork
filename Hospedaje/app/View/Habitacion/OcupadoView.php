@@ -52,10 +52,11 @@
 										<p class="fa  fa-calendar text-blue"> salida<span> <?=$helper->FormatDateTime($habitacion->fecha_salida)?></span>.</p><br>		
 									</div>
 									<div class="caja base-1-3">
-										<p class="fa fa-clock-o text-red"> <span> <?=$habitacion->horas?></span>.</p><br>	
+										<p class="fa fa-clock-o text-red"> <?=$habitacion->mensaje?></p>	
+										<p class="fa fa-clock-o text-red"> <span> <?=$habitacion->horas?></span>.</p>
 										<p class="fa fa-money text-yellow"> precio Habitacion: <span><?=$habitacion->precio?></span>.</p><br>
-										<p class="fa fa-money text-orange"> Adelanto : <span><?=$habitacion->adelanto?></span>.</p><br>
-										<p class="fa fa-money text-orange"> Deuda : <span><?=$habitacion->deuda?></span>.</p><br>
+										<p class="fa fa-money text-orange"> Adelanto : <span><?=$habitacion->adelanto?></span> &copy; </p>
+										<p class="fa fa-money text-red"> Deuda : <span><?=$habitacion->deuda?></span>.</p><br>
 										<p class="fa fa-money text-orange"> Total a Cancelar : <span><?=$habitacion->total?></span>.</p><br>
 									</div> 
 									<div class="caja base-1-6">

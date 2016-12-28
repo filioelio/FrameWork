@@ -15,6 +15,14 @@
   	<?=$helper->css('dataTables.bootstrap')?>
 	<?=$helper->css('AdminLTE.min')?>
 	<?=$helper->css('skin-yellow.min')?>
+	<style>
+		.content-header>.breadcrumb{
+			border: 1px solid #000;
+			border-radius: 2px;
+			font-size: 1em;
+		}
+	}
+	</style>
 </head>
 <body class="hold-transition skin-yellow sidebar-mini">
 	<div class="wrapper">
@@ -24,6 +32,11 @@
 	    <div class="content-wrapper">
 	    	<section class="content-header">
       			<h1>Historial de Consumo Huesped</h1>
+      			<?php if (isset($_hab) && $_hab != ""): ?>
+	      			<ol class="breadcrumb">
+	      				<li><a href="<?= $helper->url('hospedaje', 'accion'),$_hab;?>"><i class="fa fa-user-secret"></i> Volver</a></li>
+	      			</ol>	
+      			<?php endif ?>
     		</section>
     		<section class="content">				
 				<div class="row">

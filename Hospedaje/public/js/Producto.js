@@ -104,7 +104,6 @@ function Producto()
     } else {
       Opcion = "Quitar";
     }
-    
     return Opcion;
   }
 

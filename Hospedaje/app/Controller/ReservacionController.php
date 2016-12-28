@@ -37,18 +37,21 @@
 			}
 		}
 
-		public function reservado()
+		public function reservado($id_reser = NULL)
 		{
 			session_start();
 			HS::sesion_no_iniciada($this);
 
 			$user = MUsuario::getEmail($_SESSION['user']['email'])[0];
-			
+			if (isset($id_reser) && $id_reser != NULL) 
+				$habitaciones = MHabitacion::getIdReservacion($id_reser);
+			else
+				$habitaciones = MHabitacion::Reservado();
 			$data = array(
 				'mensaje'		=>"",
 				'class_mensaje'	=> "error", //exito o error
 				'usuario'		=> $user,
-				'habitaciones'	=>	MHabitacion::Reservado(),
+				'habitaciones'	=> $habitaciones,
 				'datos_template' => array(
 					'usuario' 	=> $user,
 					'cantidad'	=> MHuesped::contar(),

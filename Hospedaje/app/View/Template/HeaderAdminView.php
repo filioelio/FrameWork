@@ -25,7 +25,7 @@
                   <li>
                     <ul class="menu">
                       <li>
-                        <a href="<?= $helper->url('reservacion', 'reservado');?>">
+                        <a href="<?= $helper->url('reservacion', 'reservado',$item->id_reservacion);?>">
                           <div class="pull-left">
                             <img src="<?=$helper->base_url().'/img/Habitacion/'.$item->foto ?>" class="img-circle" alt="User Image">
                           </div>
@@ -33,7 +33,8 @@
                             <?=$item->huesped?>
                             <small><i class="fa fa-clock-o"></i> <?=$item->tiempo?></small>
                           </h4>
-                          <p><?=$helper->FormatDate($item->fecha_ingreso)?></p>
+                          <p><small class="text-blue" style="
+    font-size: 110%;" ><i class="fa fa-home"></i> <?=$item->id_habitacion?></small> - <?=$helper->FormatDate($item->fecha_ingreso)?> </p>
                         </a>
                       </li>
                     </ul>

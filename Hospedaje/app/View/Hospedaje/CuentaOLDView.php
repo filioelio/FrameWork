@@ -4,14 +4,14 @@
 	<meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<?=$helper->favicon();?>
-	<title>Historial-Hospedaje</title>
+	<title>Hospedaje - Cuenta</title>
 	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-	<?=$helper->css('ed-grid')?>
+  	<?=$helper->css('ed-grid')?>
   	<?=$helper->css('header')?>
+    <?=$helper->css('ExitoError')?>
 	<?=$helper->css('bootstrap.min')?>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
   	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
-  	
   	<?=$helper->css('dataTables.bootstrap')?>
 	<?=$helper->css('AdminLTE.min')?>
 	<?=$helper->css('skin-yellow.min')?>
@@ -24,11 +24,10 @@
 
 	    <div class="content-wrapper">
 	    	<section class="content-header">
-      			<h1>Registro de Actividades</h1>
+      			<h1>Ultimas Actividades del Hospedaje</h1>
     		</section>
-
     		<section class="content">
-    			<div class="row">
+				<div class="row">
 	    			<div class="col-md-8"> 
 	    				<div class="box box-info">
 			            	<div class="box-header with-border">
@@ -141,7 +140,7 @@
 			            	</form>
 			            </div>
 	    			</div>
-	    		</div>		
+	    		</div>
 			</section>
 		</div>
 		<?=$this->view('Template/FooterAdmin')?>
@@ -150,19 +149,17 @@
 	<?=$helper->js('jQuery-2.2.0.min')?>
 	<?=$helper->js('bootstrap.min')?>
 	<?=$helper->js('jquery.dataTables.min')?> 
-  	<?=$helper->js('dataTables.bootstrap.min')?>
-  	<?=$helper->js('jquery.slimscroll.min')?>
-  	<?=$helper->js('fastclick.min')?>
-	<?=$helper->js('app.min')?>
+	<?=$helper->js('dataTables.bootstrap.min')?>
+	<?=$helper->js('jquery.slimscroll.min')?>
 	<?=$helper->js('variables-globales')?>
-  	<?=$helper->js('EventoPersonal')?>
+	<?=$helper->js('EventoPersonal')?>
 	<?=$helper->js('sweetalert.min')?>
 
 	<script>
-	  $(function () {
-	    $("#example1").DataTable();
-	     $(".slimScrollDiv").css('height', '70px');
-	  });
+		$(document).ready(function(){
+		  $("#example1").DataTable();
+		  $(".slimScrollDiv").css('height', '70px');
+		});
 	</script>
 
 </body>

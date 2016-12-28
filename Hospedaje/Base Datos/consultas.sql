@@ -1,4 +1,56 @@
-PODEMOS ESTABLECER HORAS FIJAS EN UN DIA
+-- CONSULTA PARA DETERMINARA CUANTOS DE LOS QUE RESERVACION FORMALIZARON SU RESERVACION
+SELECT ha.id_habitacion, ha.foto, concat(hu.nombre,' ',hu.apellido) as huesped, re.fecha_ingreso,
+  CONCAT( 
+    EXTRACT(day FROM TIMEDIFF(NOW(), re.fecha_reser)), ' - ', 
+    EXTRACT(hour FROM TIMEDIFF(NOW(), re.fecha_reser)),':', 
+    EXTRACT(MINUTE FROM TIMEDIFF(NOW(), re.fecha_reser)),'m') as tiempo 
+FROM reservacion re 
+INNER JOIN huesped hu ON re.fk_id_huesped = hu.id_huesped 
+INNER JOIN habitacion ha ON re.fk_id_habitacion = ha.id_habitacion 
+WHERE re.estado != 'Cancelado' AND (DATEDIFF(re.fecha_ingreso, NOW()) = '1' OR DATEDIFF(re.fecha_ingreso, NOW()) = '0') AND 
+(
+  SELECT ho.fk_id_huesped 
+  FROM hospedaje ho 
+  WHERE ho.fk_id_huesped = re.fk_id_huesped AND ho.fk_id_habitacion = re.fk_id_habitacion
+)
+
+-- CONSULTAS PARA DETECTAR QUE HABITACION FUE ALQUILADO CUANDO EXISTIA UNA RESERVACION PARA ESA FECHA 
+SELECT ha.id_habitacion, ha.foto, concat(hu.nombre,' ',hu.apellido) as huesped, re.fecha_ingreso,
+CONCAT( 
+  EXTRACT(day FROM TIMEDIFF(NOW(), re.fecha_reser)), ' - ', 
+  EXTRACT(hour FROM TIMEDIFF(NOW(), re.fecha_reser)),':', 
+  EXTRACT(MINUTE FROM TIMEDIFF(NOW(), re.fecha_reser)),'m') as tiempo 
+FROM reservacion re 
+INNER JOIN huesped hu ON re.fk_id_huesped = hu.id_huesped 
+INNER JOIN habitacion ha ON re.fk_id_habitacion = ha.id_habitacion 
+WHERE re.estado != 'Cancelado' AND (DATEDIFF(re.fecha_ingreso, NOW()) = '1' OR DATEDIFF(re.fecha_ingreso, NOW()) = '0') AND 
+re.fk_id_huesped NOT IN ( 
+  SELECT ho.fk_id_huesped 
+  FROM hospedaje ho 
+  WHERE ho.fk_id_huesped = re.fk_id_huesped AND ho.fk_id_habitacion = re.fk_id_habitacion 
+)
+
+
+SELECT COALESCE(
+        CASE WHEN 
+          EXISTS (SELECT re.fk_id_habitacion 
+                  FROM reservacion re 
+                  WHERE ha.id_habitacion = re.fk_id_habitacion 
+                    AND (DATEDIFF(re.fecha_ingreso, NOW()) = '1' OR DATEDIFF(re.fecha_ingreso, NOW()) = '0') 
+                    AND re.estado != 'Cancelado' 
+                    AND re.fk_id_huesped NOT IN ( 
+                      SELECT ho.fk_id_huesped 
+                      FROM hospedaje ho 
+                      WHERE ho.fk_id_huesped = re.fk_id_huesped 
+                        AND ho.fk_id_habitacion = re.fk_id_habitacion )
+                  ) 
+          THEN 'si esta reservado' 
+          ELSE 
+            'no esta reservado'
+        END
+    ) as estado 
+  FROM habitacion ha
+-- PODEMOS ESTABLECER HORAS FIJAS EN UN DIA
 
 SELECT TIMESTAMP('2003-12-31','13:00:00')
 SELECT TIMESTAMP(DATE(NOW()),'13:00:00')
@@ -9,6 +61,277 @@ SELECT CONCAT(
   EXTRACT(hour FROM TIMEDIFF(TIMESTAMP(DATE(NOW()),'13:00:00'), fecha_ingreso)),':', 
   EXTRACT(MINUTE FROM TIMEDIFF(TIMESTAMP(DATE(NOW()),'13:00:00'), fecha_ingreso))
   ) AS HORA FROM hospedaje
+
+
+
+-- ESTO REGLA CUMPLE PARA LOS HUESPEDES QUE ENTRAN EN LA MADRUGA ANTENS DE LAS DE LAS 6 DE LA MADRUGADA
+      COALESCE(CASE  WHEN 
+          EXTRACT(HOUR FROM TIMEDIFF(ho.fecha_ingreso, TIMESTAMP(DATE(NOW()),'05:00:00'))) <= 0 AND 
+          EXTRACT(DAY FROM TIMEDIFF(NOW(),TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00'))) = 0
+        THEN
+          'TERMINA HOY AL MEDIO DIA OP 1'
+      END)
+
+-- ESTO ES LA REGLA PARA AQUEL HUESPED QUE ENTRO EN LA MADRUGADA Y SIGUE OCUPANDO HASTA LAS 6 DE NOCHE
+      COALESCE(CASE  WHEN 
+          EXTRACT(HOUR FROM TIMEDIFF(NOW(),TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00'))) < 7 AND 
+          EXTRACT(HOUR FROM TIMEDIFF(NOW(),TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00'))) > 0 AND 
+          EXTRACT(DAY FROM TIMEDIFF(NOW(),TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00'))) = 0
+        THEN
+          'ESTAS EN TU TIEMPO EXTRA PERO TIENES QUE PAGAR OP 2'
+      END)
+
+-- SE EL CASO ES QUE TE QUEDASTE HASTA MAS DE LAS 6 DE LA NOCHE ENTONCES EL HUESPED A EMPESADO NUEVO DIA
+      COALESCE(CASE  WHEN 
+          EXTRACT(HOUR FROM TIMEDIFF(NOW(),TIMESTAMP(DATE(NOW()),'13:00:00'))) >= 6 AND 
+          EXTRACT(DAY FROM TIMEDIFF(NOW(),TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00'))) = 0
+        THEN
+          'USTED ACABA DE EMPESAR NUEVO DIA OP 3 FINALIZA MAÑANA AL MEDIO DIA'
+      END)
+
+-- ESTO CUMPLE PARA AQUELLOS HUESPEDES QUE ENTRARON DESDE LAS 6 EN PUNTO A MAS 
+      COALESCE(CASE  WHEN 
+          (EXTRACT(HOUR FROM TIMEDIFF(TIMESTAMP(DATE(NOW()),'13:00:00'),ho.fecha_ingreso)) < 7 OR 
+          EXTRACT(HOUR FROM TIMEDIFF(ho.fecha_ingreso,TIMESTAMP(DATE(NOW()),'13:00:00'))) > 0) AND
+          DATE(ho.fecha_ingreso) = DATE(NOW()) AND
+          EXTRACT(DAY FROM TIMEDIFF(NOW(),TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00'))) = 0
+        THEN
+          'TERMINA MAÑANA AL MEDIO DIA OP 4'
+      END)
+
+-- SI CANTIDAD DE DIAS ES MAYOR O IGUAL A 1
+      COALESCE(CASE  WHEN 
+          (EXTRACT(HOUR FROM TIMEDIFF(TIMESTAMP(DATE(NOW()),'13:00:00'),ho.fecha_ingreso)) >= 7 AND DATE(ho.fecha_ingreso) = DATE(NOW())) OR
+          EXTRACT(DAY FROM TIMEDIFF(TIMESTAMP(DATE(NOW()),'13:00:00'),TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00'))) != 0
+        THEN
+          'TERMINA HOY AL MEDIO DIA OP 5'
+      END)
+
+-- SI TIENES MAS DE UN DIA REGISTRADO Y  TE HAS EXEDIDO DE LA HORA DE SALIDA
+      COALESCE(CASE  WHEN 
+          EXTRACT(DAY FROM TIMEDIFF(TIMESTAMP(DATE(NOW()),'13:00:00'),TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00'))) != 0 AND
+          EXTRACT(HOUR FROM TIMEDIFF(NOW(),TIMESTAMP(DATE(NOW()),'13:00:00'))) < 7 AND  
+          EXTRACT(HOUR FROM TIMEDIFF(NOW(),TIMESTAMP(DATE(NOW()),'13:00:00'))) > 0
+        THEN
+          'ESTAS EN TU TIEMPO EXTRA PERO TIENES QUE PAGAR OP 6'
+      END)
+
+-- SE EL CASO ES QUE TE QUEDASTE HASTA MAS DE LAS 6 DE LA NOCHE ENTONCES EL HUESPED A EMPESADO NUEVO DIA
+      COALESCE(CASE  WHEN 
+          EXTRACT(DAY FROM TIMEDIFF(TIMESTAMP(DATE(NOW()),'13:00:00'),TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00'))) != 0 AND
+          EXTRACT(HOUR FROM TIMEDIFF(NOW(),TIMESTAMP(DATE(NOW()),'13:00:00'))) >= 7  
+        THEN
+          'USTED ACABA DE EMPESAR NUEVO DIA OP 7 f mañana'
+      END)
+
+
+
+
+---------------------------- SE ESTA APLICANDO ESTA OPCION EN LAS CONSULTAS DE SISTEMA---------------------------
+SELECT ho.fk_id_habitacion as habi, 
+  COALESCE(
+    CASE
+      WHEN EXTRACT(DAY FROM TIMEDIFF(NOW(),TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00'))) = 0 AND 
+            EXTRACT(HOUR FROM TIMEDIFF(NOW(),TIMESTAMP(DATE(NOW()),'13:00:00'))) >= 5 
+        THEN 1
+      WHEN EXTRACT(DAY FROM TIMEDIFF(TIMESTAMP(DATE(NOW()),'13:00:00'),TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00'))) = 0 AND 
+            EXTRACT(HOUR FROM TIMEDIFF(NOW(),TIMESTAMP(DATE(NOW()),'13:00:00'))) >= 5 
+        THEN 1
+      WHEN
+          EXTRACT(DAY FROM TIMEDIFF(NOW(),TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00'))) = 0 AND
+          (EXTRACT(HOUR FROM TIMEDIFF(TIMESTAMP(DATE(NOW()),'13:00:00'),ho.fecha_ingreso)) < 6 OR 
+          EXTRACT(HOUR FROM TIMEDIFF(ho.fecha_ingreso,TIMESTAMP(DATE(NOW()),'13:00:00'))) > 0) AND
+          DATE(ho.fecha_ingreso) = DATE(NOW()) 
+        THEN 1
+      WHEN 
+          EXTRACT(DAY FROM TIMEDIFF(NOW(),TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00'))) = 0 AND
+          EXTRACT(HOUR FROM TIMEDIFF(ho.fecha_ingreso, TIMESTAMP(DATE(NOW()),'05:00:00'))) <= 0  AND
+          DATE(ho.fecha_ingreso) = DATE(NOW()) 
+        THEN 1
+
+      WHEN EXTRACT(DAY FROM TIMEDIFF(TIMESTAMP(DATE(NOW()),'13:00:00'),TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00'))) != 0
+           AND EXTRACT(HOUR FROM TIMEDIFF(NOW(),TIMESTAMP(DATE(NOW()),'13:00:00'))) >= 5 
+        THEN EXTRACT(DAY FROM TIMEDIFF(TIMESTAMP(DATE(NOW()),'13:00:00'),TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00')))+1
+
+      WHEN EXTRACT(DAY FROM TIMEDIFF(TIMESTAMP(DATE(NOW()),'13:00:00'),TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00'))) != 0 AND 
+           EXTRACT(HOUR FROM TIMEDIFF(ho.fecha_ingreso, TIMESTAMP(DATE(ho.fecha_ingreso),'05:00:00'))) <= 0 
+        THEN EXTRACT(DAY FROM TIMEDIFF(TIMESTAMP(DATE(NOW()),'13:00:00'),TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00')))+1
+
+      WHEN (EXTRACT(HOUR FROM TIMEDIFF(TIMESTAMP(DATE(NOW()),'13:00:00'),ho.fecha_ingreso)) >= 5 AND 
+           DATE(ho.fecha_ingreso) = DATE(NOW())) OR
+          EXTRACT(DAY FROM TIMEDIFF(TIMESTAMP(DATE(NOW()),'13:00:00'),TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00'))) != 0
+        THEN EXTRACT(DAY FROM TIMEDIFF(TIMESTAMP(DATE(NOW()),'13:00:00'),TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00')))
+    END
+  ) as mensaje
+  FROM hospedaje ho
+----------------------------------------------------------------------------------------------------------------------------
+
+
+----------------------------------- CONSULTA PARA LOS HOSPEDAJES FINALIZADOS------------------------------------------------
+SELECT ho.fk_id_habitacion as habi, 
+  COALESCE(
+    CASE
+      WHEN EXTRACT(DAY FROM TIMEDIFF(ho.fecha_salida,TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00'))) = 0 AND 
+            EXTRACT(HOUR FROM TIMEDIFF(ho.fecha_salida,TIMESTAMP(DATE(NOW()),'13:00:00'))) >= 5 
+        THEN 1
+      WHEN EXTRACT(DAY FROM TIMEDIFF(TIMESTAMP(DATE(ho.fecha_salida),'13:00:00'),TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00'))) = 0 AND 
+            EXTRACT(HOUR FROM TIMEDIFF(NOW(),TIMESTAMP(DATE(NOW()),'13:00:00'))) >= 5 
+        THEN 1
+      WHEN
+          EXTRACT(DAY FROM TIMEDIFF(ho.fecha_salida,TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00'))) = 0 AND
+          (EXTRACT(HOUR FROM TIMEDIFF(TIMESTAMP(DATE(ho.fecha_salida),'13:00:00'),ho.fecha_ingreso)) < 6 OR 
+          EXTRACT(HOUR FROM TIMEDIFF(ho.fecha_ingreso,TIMESTAMP(DATE(ho.fecha_salida),'13:00:00'))) > 0) AND
+          DATE(ho.fecha_ingreso) = DATE(ho.fecha_salida) 
+        THEN 1
+      WHEN 
+          EXTRACT(DAY FROM TIMEDIFF(ho.fecha_salida,TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00'))) = 0 AND
+          EXTRACT(HOUR FROM TIMEDIFF(ho.fecha_ingreso, TIMESTAMP(DATE(ho.fecha_salida),'05:00:00'))) <= 0  AND
+          DATE(ho.fecha_ingreso) = DATE(ho.fecha_salida) 
+        THEN 1
+
+      WHEN EXTRACT(DAY FROM TIMEDIFF(TIMESTAMP(DATE(ho.fecha_salida),'13:00:00'),TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00'))) != 0
+           AND EXTRACT(HOUR FROM TIMEDIFF(ho.fecha_salida,TIMESTAMP(DATE(ho.fecha_salida),'13:00:00'))) >= 5 
+        THEN EXTRACT(DAY FROM TIMEDIFF(TIMESTAMP(DATE(ho.fecha_salida),'13:00:00'),TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00')))+1
+
+      WHEN EXTRACT(DAY FROM TIMEDIFF(TIMESTAMP(DATE(ho.fecha_salida),'13:00:00'),TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00'))) != 0 AND 
+           EXTRACT(HOUR FROM TIMEDIFF(ho.fecha_ingreso, TIMESTAMP(DATE(ho.fecha_ingreso),'05:00:00'))) <= 0 
+        THEN EXTRACT(DAY FROM TIMEDIFF(TIMESTAMP(DATE(ho.fecha_salida),'13:00:00'),TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00')))+1
+
+      WHEN (EXTRACT(HOUR FROM TIMEDIFF(TIMESTAMP(DATE(ho.fecha_salida),'13:00:00'),ho.fecha_ingreso)) >= 5 AND 
+           DATE(ho.fecha_ingreso) = DATE(ho.fecha_salida)) OR
+          EXTRACT(DAY FROM TIMEDIFF(TIMESTAMP(DATE(ho.fecha_salida),'13:00:00'),TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00'))) != 0
+        THEN EXTRACT(DAY FROM TIMEDIFF(TIMESTAMP(DATE(ho.fecha_salida),'13:00:00'),TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00')))
+    END
+  ) as mensaje
+  FROM hospedaje ho
+  ------------------------------------------------------------------------------------------------------------
+
+
+
+
+-- consultas unidas para lograr que lance el mensaje de cuanto
+
+      COALESCE(CASE  WHEN 
+          (EXTRACT(HOUR FROM TIMEDIFF(ho.fecha_ingreso, TIMESTAMP(DATE(NOW()),'05:00:00'))) <= 0 AND 
+          EXTRACT(DAY FROM TIMEDIFF(NOW(),TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00'))) = 0) OR 
+          ((EXTRACT(HOUR FROM TIMEDIFF(TIMESTAMP(DATE(NOW()),'13:00:00'),ho.fecha_ingreso)) >= 7 AND DATE(ho.fecha_ingreso) = DATE(NOW())) OR
+          EXTRACT(DAY FROM TIMEDIFF(TIMESTAMP(DATE(NOW()),'13:00:00'),TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00'))) != 0)
+        THEN
+          'TERMINA HOY AL MEDIO DIA OP 1'
+      END)
+
+COALESCE(CASE  WHEN 
+          (EXTRACT(HOUR FROM TIMEDIFF(NOW(),TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00'))) < 7 AND 
+          EXTRACT(HOUR FROM TIMEDIFF(NOW(),TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00'))) > 0 AND 
+          EXTRACT(DAY FROM TIMEDIFF(NOW(),TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00'))) = 0) 
+          OR 
+          (EXTRACT(DAY FROM TIMEDIFF(TIMESTAMP(DATE(NOW()),'13:00:00'),TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00'))) != 0 AND
+          EXTRACT(HOUR FROM TIMEDIFF(NOW(),TIMESTAMP(DATE(NOW()),'13:00:00'))) < 7 AND  
+          EXTRACT(HOUR FROM TIMEDIFF(NOW(),TIMESTAMP(DATE(NOW()),'13:00:00'))) > 0)
+        THEN
+          'ESTAS EN TU TIEMPO EXTRA PERO TIENES QUE PAGAR OP 2'
+      END)
+
+
+ COALESCE(CASE  WHEN 
+          ((EXTRACT(DAY FROM TIMEDIFF(NOW(),TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00'))) = 0 OR 
+          EXTRACT(DAY FROM TIMEDIFF(TIMESTAMP(DATE(NOW()),'13:00:00'),TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00'))) != 0
+          ) AND EXTRACT(HOUR FROM TIMEDIFF(NOW(),TIMESTAMP(DATE(NOW()),'13:00:00'))) >= 7) OR 
+          ((EXTRACT(HOUR FROM TIMEDIFF(TIMESTAMP(DATE(NOW()),'13:00:00'),ho.fecha_ingreso)) < 7 OR 
+          EXTRACT(HOUR FROM TIMEDIFF(ho.fecha_ingreso,TIMESTAMP(DATE(NOW()),'13:00:00'))) > 0) AND
+          DATE(ho.fecha_ingreso) = DATE(NOW()) AND
+          EXTRACT(DAY FROM TIMEDIFF(NOW(),TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00'))) = 0)
+        THEN
+          'USTED FINALIZA MAÑANA AL MEDIO DIA'
+      END)
+
+
+
+
+
+
+
+
+
+
+
+
+-- CONSULTA PARA DETERMINAR CUANDO SALE Y SI ESTA EN SU TIEMPO EXTRA
+
+SELECT ho.fk_id_habitacion as habi, 
+  COALESCE(
+    CASE 
+      WHEN 
+          (EXTRACT(HOUR FROM TIMEDIFF(NOW(),TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00'))) < 7 AND 
+          EXTRACT(HOUR FROM TIMEDIFF(NOW(),TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00'))) > 0 AND 
+          EXTRACT(DAY FROM TIMEDIFF(NOW(),TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00'))) = 0) OR 
+          (EXTRACT(DAY FROM TIMEDIFF(TIMESTAMP(DATE(NOW()),'13:00:00'),TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00'))) != 0 AND
+          EXTRACT(HOUR FROM TIMEDIFF(NOW(),TIMESTAMP(DATE(NOW()),'13:00:00'))) < 7 AND  
+          EXTRACT(HOUR FROM TIMEDIFF(NOW(),TIMESTAMP(DATE(NOW()),'13:00:00'))) > 0)
+        THEN
+          'Estas en tu tiempo Extra'
+
+      WHEN ((EXTRACT(DAY FROM TIMEDIFF(NOW(),TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00'))) = 0 OR 
+          EXTRACT(DAY FROM TIMEDIFF(TIMESTAMP(DATE(NOW()),'13:00:00'),TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00'))) != 0
+          ) AND EXTRACT(HOUR FROM TIMEDIFF(NOW(),TIMESTAMP(DATE(NOW()),'13:00:00'))) >= 7) OR 
+          ((EXTRACT(HOUR FROM TIMEDIFF(TIMESTAMP(DATE(NOW()),'13:00:00'),ho.fecha_ingreso)) < 7 OR 
+          EXTRACT(HOUR FROM TIMEDIFF(ho.fecha_ingreso,TIMESTAMP(DATE(NOW()),'13:00:00'))) > 0) AND
+          DATE(ho.fecha_ingreso) = DATE(NOW()) AND
+          EXTRACT(DAY FROM TIMEDIFF(NOW(),TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00'))) = 0)
+        THEN
+          'Finaliza Mañana al Medio Día'
+      WHEN 
+          (EXTRACT(HOUR FROM TIMEDIFF(ho.fecha_ingreso, TIMESTAMP(DATE(NOW()),'05:00:00'))) <= 0 AND 
+          EXTRACT(DAY FROM TIMEDIFF(NOW(),TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00'))) = 0) OR 
+          ((EXTRACT(HOUR FROM TIMEDIFF(TIMESTAMP(DATE(NOW()),'13:00:00'),ho.fecha_ingreso)) >= 7 AND DATE(ho.fecha_ingreso) = DATE(NOW())) OR
+          EXTRACT(DAY FROM TIMEDIFF(TIMESTAMP(DATE(NOW()),'13:00:00'),TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00'))) != 0)
+        THEN
+          'Finaliza Hoy al Medio Día'
+    END
+  ) as mensaje
+  FROM hospedaje ho
+
+
+COALESCE(
+    CASE 
+      WHEN 
+          (EXTRACT(HOUR FROM TIMEDIFF(NOW(),TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00'))) < 6 AND 
+          EXTRACT(HOUR FROM TIMEDIFF(NOW(),TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00'))) > 0 AND 
+          EXTRACT(DAY FROM TIMEDIFF(NOW(),TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00'))) = 0)
+      THEN 'Finaliza Mañana al Medio Día'
+      WHEN
+          (EXTRACT(DAY FROM TIMEDIFF(TIMESTAMP(DATE(NOW()),'13:00:00'),TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00'))) != 0 AND
+          EXTRACT(HOUR FROM TIMEDIFF(NOW(),TIMESTAMP(DATE(NOW()),'13:00:00'))) < 6 AND  
+          EXTRACT(HOUR FROM TIMEDIFF(NOW(),TIMESTAMP(DATE(NOW()),'13:00:00'))) > 0)
+        THEN 'Estas en tu tiempo Extra'
+      WHEN ((EXTRACT(DAY FROM TIMEDIFF(NOW(),TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00'))) = 0 OR 
+          EXTRACT(DAY FROM TIMEDIFF(TIMESTAMP(DATE(NOW()),'13:00:00'),TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00'))) != 0
+          ) AND EXTRACT(HOUR FROM TIMEDIFF(NOW(),TIMESTAMP(DATE(NOW()),'13:00:00'))) >= 5) OR 
+          ((EXTRACT(HOUR FROM TIMEDIFF(TIMESTAMP(DATE(NOW()),'13:00:00'),ho.fecha_ingreso)) < 6 OR 
+          EXTRACT(HOUR FROM TIMEDIFF(ho.fecha_ingreso,TIMESTAMP(DATE(NOW()),'13:00:00'))) > 0) AND
+          DATE(ho.fecha_ingreso) = DATE(NOW()) AND
+          EXTRACT(DAY FROM TIMEDIFF(NOW(),TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00'))) = 0)
+        THEN 'Finaliza Mañana al Medio Día'
+      WHEN 
+          (EXTRACT(HOUR FROM TIMEDIFF(ho.fecha_ingreso, TIMESTAMP(DATE(NOW()),'05:00:00'))) <= 0 AND 
+          EXTRACT(DAY FROM TIMEDIFF(NOW(),TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00'))) = 0) OR 
+          ((EXTRACT(HOUR FROM TIMEDIFF(TIMESTAMP(DATE(NOW()),'13:00:00'),ho.fecha_ingreso)) >= 5 AND DATE(ho.fecha_ingreso) = DATE(NOW())) OR
+          EXTRACT(DAY FROM TIMEDIFF(TIMESTAMP(DATE(NOW()),'13:00:00'),TIMESTAMP(DATE(ho.fecha_ingreso),'13:00:00'))) != 0)
+        THEN
+          'Finaliza Hoy al Medio Día'
+    END
+  ) as mensaje
+
+
+
+
+
+
+
+
+
+
+
 
 
 consulta de hospedaje con usuario entre dos fecha

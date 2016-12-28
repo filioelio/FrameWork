@@ -37,14 +37,19 @@
 							</a>
 						</div>
 					</div>
-
 						<!-- inicio formulario -->
 					<?php if (isset($habitaciones)): ?>
 						<?php foreach ($habitaciones as $key => $habitacion): ?>
 							<?php if ($habitacion->getEstado() == 'Disponible'): ?>		
 								<div id="from_menu" class="grupo">
 									<div class="form_info caja menu_titulo total centro-contenido">
-										<h2>Habitación Nº: <span><?=$habitacion->getIdHabitacion()?></span></h2>
+										<h2>Habitación Nº: <span><?=$habitacion->getIdHabitacion()?></span>
+										<?php if (isset($habitacion->getAlert()->mensaje) && $habitacion->getAlert()->mensaje == 1): ?>
+										    <a href="<?=$helper->url('reservacion','reservado',$habitacion->getAlert()->id)?>" class="dropdown-toggle label label-warning pull-right" >
+										        <i class="fa fa-envelope-o"></i>
+										    </a>
+										<?php endif ?>
+										</h2>
 									</div>
 									<div class="form_info caja menu_img movil-25">
 										<img class="" src="<?= $habitacion->getFoto(true) != NULL ? $habitacion->getFoto(true) : $helper->base_url().'/img/Habitacion/template.jpg' ?>" alt="">

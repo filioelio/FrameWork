@@ -89,7 +89,15 @@
 			if($path) return VariablesGlobales::$base_url . self::PATH . $this->foto;
 
 			return $this->foto;
-		}		
+		}	
 
-
+		private $alert;
+		public function setAlert($alert)
+		{
+			$this->alert = $alert != NULL ? $alert : NULL;
+		}
+		public function getAlert()
+		{
+			return $this->alert;
+		}
 	}

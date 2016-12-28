@@ -23,6 +23,9 @@
 		{
 			@session_start();
 			HS::sesion_no_iniciada($this);
+			$jornada = MJornada::getIdLast()[0];
+			$fecha = $jornada->getFechaIngreso();
+			
 			$data = array(
 				'titulo_view' => "Reporte de Venta Hostal Encanto",
 				'titulo_page' => "",
@@ -66,13 +69,7 @@
 				"usuario"
 			);
 
-			if (isset($_SESSION['RGIngresoToday']['fecha'])) 
-			{
-				$fecha = $_SESSION['RGIngresoToday']['fecha'];
-			} else {
-				$jornada = MJornada::getIdLast()[0];
-				$fecha = $jornada->getFechaIngreso();
-			}
+
 			if ($patron == 'general') {
 				$data['reportetodaycompleto'] = true;
 				$tipo = "Reporte General de Ingreso del";

@@ -6,6 +6,22 @@ $$
 DELIMITER ;
 
 DELIMITER $$
+CREATE TRIGGER `InsetarHospedaje` AFTER INSERT ON `hospedaje` FOR EACH ROW BEGIN
+DECLARE monto decimal(10,2);
+SELECT adelanto INTO monto FROM reservacion WHERE fk_id_huesped = NEW.fk_id_huesped AND fk_id_habitacion = NEW.fk_id_habitacion ORDER BY id_reservacion DESC LIMIT 1; 
+UPDATE `habitacion` SET `estado`= 'Ocupado' WHERE `id_habitacion`= NEW.fk_id_habitacion;
+IF (NEW.costo_total > 0) THEN
+	IF monto > 0 THEN
+   		INSERT INTO `auditoriahospedaje`(`id_auditoria`, `fecha`, `monto`, `fk_id_hospedaje`, `fk_id_usuario`) VALUES ('',Now(), NEW.costo_total - monto, NEW.id_hospedaje,NEW.fk_id_usuario);
+   	ELSE
+   		INSERT INTO `auditoriahospedaje`(`id_auditoria`, `fecha`, `monto`, `fk_id_hospedaje`, `fk_id_usuario`) VALUES ('',Now(), NEW.costo_total ,NEW.id_hospedaje,NEW.fk_id_usuario);
+   	END IF;
+ END IF;
+END
+$$
+DELIMITER ;
+
+DELIMITER $$
 CREATE TRIGGER `UpdateHospedaje` AFTER UPDATE ON `hospedaje` FOR EACH ROW BEGIN
 IF (NEW.costo_total-OLD.costo_total>0) THEN
 	 INSERT INTO `auditoriahospedaje`(`id_auditoria`, `fecha`, `monto`, `fk_id_hospedaje`, `fk_id_usuario`) VALUES ('',Now(), NEW.costo_total-OLD.costo_total ,OLD.id_hospedaje,NEW.fk_id_usuario);
@@ -18,23 +34,11 @@ $$
 DELIMITER ;
 
 DELIMITER $$
-CREATE TRIGGER `Update_Habitacion` AFTER INSERT ON `hospedaje` FOR EACH ROW BEGIN
-   UPDATE `habitacion` SET `estado`= 'Ocupado' WHERE `id_habitacion`= NEW.fk_id_habitacion;
-IF (NEW.costo_total > 0) THEN
- INSERT INTO `auditoriahospedaje`(`id_auditoria`, `fecha`, `monto`, `fk_id_hospedaje`, `fk_id_usuario`) VALUES ('',Now(), NEW.costo_total ,NEW.id_hospedaje,NEW.fk_id_usuario);
- END IF;
-END
-$$
-DELIMITER ;
-
-
-DELIMITER $$
 CREATE TRIGGER `InsertarAuditoriaVenta` AFTER INSERT ON `venta` FOR EACH ROW BEGIN
 INSERT INTO `auditoriaventa`(`id_auditoria`, `fecha`, `monto`, `fk_id_venta`, `fk_id_usuario`) VALUES ('',NOW(),NEW.total-NEW.deuda, NEW.id_venta, NEW.fk_id_usuario);
 END
 $$
 DELIMITER ;
-
 DELIMITER $$
 CREATE TRIGGER `UpdateAuditoriaVenta` AFTER UPDATE ON `venta` FOR EACH ROW BEGIN
 INSERT INTO `auditoriaventa`(`id_auditoria`, `fecha`, `monto`, `fk_id_venta`, `fk_id_usuario`) VALUES ('',NOW(),OLD.deuda-NEW.deuda, OLD.id_venta, NEW.fk_id_usuario);

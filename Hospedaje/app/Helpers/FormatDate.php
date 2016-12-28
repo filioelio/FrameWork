@@ -102,7 +102,7 @@
             if ($time[0]== 00) 
             {
                 return "<td data-id='".$id_hos."' class='tools LinkVerH' data-toggle='modal' data-target='.DatosHuesped'>
-                            <i class='fa fa-edit text-green'> Ver</i>
+                            <i class='fa fa-edit text-green'> Activo</i>
                         </td>" ;
             } else {
                 return "<td data-id='".$id_hos."' class='tools LinkVerH' data-toggle='modal' data-target='.DatosHuesped'>

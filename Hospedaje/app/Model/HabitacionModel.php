@@ -22,6 +22,12 @@
 			$a_habitacion = new AHabitacion();
 			$habitacion = $a_habitacion->getAll(self::HABITACION_NAMESPACE);
 			if (! isset($habitacion)) return NULL;
+			foreach ($habitacion as $key => $habi_actual) {
+				$mensaje = $a_habitacion->MensajeAlert($habi_actual->getIdHabitacion());
+				if (!isset($mensaje)) continue;
+				$habi_actual->setAlert($mensaje);
+				$habitacion[$key] = $habi_actual;
+			}
 			return $habitacion;
 		}
 
@@ -54,6 +60,22 @@
 				$ocupado = $ocupado;
 			}
 			return $ocupado;
+		}
+
+		public function getIdReservacion($id_reservacion)
+		{
+			$a_habitacion = new AHabitacion();
+			$reservado = $a_habitacion->getIdReservacion($id_reservacion);
+
+			if(isset($reservado) && (is_array($reservado) || is_object($reservado)))
+			{
+				if(is_object($reservado))
+				{
+					$reservado = array($reservado);
+				}
+				$reservado = $reservado;
+			}
+			return $reservado;
 		}
 
 		public function Reservado()

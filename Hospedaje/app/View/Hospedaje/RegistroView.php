@@ -164,7 +164,18 @@
 							      	</div>
 							    </div>
 							</div>
-						</div>					     					    
+						</div>
+						<?php if (isset($adelanto) && $adelanto != ""): ?>
+							<div class="form-group">
+						      	<label>Adelanto de Reservación</label>
+						      	<div class="input-group">
+							      	<div class="input-group-addon">
+				                        <i class="fa fa-money text-orange"></i>
+				                     </div>
+							      	<input type="text" class="form-control"  name="adelanto" value="<?=$adelanto?>" required readonly>
+						      	</div>
+						    </div> 					     					    	
+						<?php endif ?>					     					    
 						<div class="row">
 							<div class="col-md-6 form-group">
 									<input type="checkbox" id="check">
@@ -175,7 +186,7 @@
 									<div class="input-group-addon">
 				                        <i class="fa fa-money text-yellow"></i>
 				                     </div>
-									<input id="saldo" name="saldo" value="<?=$adelanto?>" readonly type="text" class="form-control" placeholder="00.00 Soles">
+									<input id="saldo" name="saldo" readonly type="text" class="form-control" placeholder="00.00 Soles">
 								</div>								
 							</div>
 						</div>				      	

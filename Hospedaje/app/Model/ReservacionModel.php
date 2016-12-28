@@ -72,14 +72,6 @@
 			return $reservacion;
 		}
 
-		// public function all()
-		// {
-		// 	$a_reservacion = new AReservacion();
-		// 	$reservacion = $a_reservacion->getAll(self::RESERVACION_NAMESPACE);
-		// 	if (! isset($reservacion)) return NULL;
-		// 	return $reservacion;
-		// }
-
 		public function save($descripcion, $fecha_reser, $ingreso, $salida, $adelanto, $id_usuario, $id_huesped, $id_habitacion)
 		{
 			$estado = "";

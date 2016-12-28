@@ -152,6 +152,7 @@
 			</div>
 		</div>
 
+		<!-- <button onclick="setTimeout('saludo()',3000);">Saludo a los 3 segundos</button> -->
 
 		<?=$this->view('Template/FooterAdmin')?>
  		<?=$this->view('Template/Asidebar')?>
@@ -163,7 +164,15 @@
 	<?=$helper->js('variables-globales')?>	
 	<?=$helper->js('Producto')?>
 	<?=$helper->js('carrito')?>	
+	<!-- <script>
+		$("#Salir").on('click', function(){
+			setTimeout(saludo,3000);
+		});
 
+		function saludo(){
+			 alert("has hecho click en salir");
+			}
+	</script> -->
 
 
 </body>

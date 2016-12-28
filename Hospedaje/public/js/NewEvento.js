@@ -284,7 +284,6 @@ function CargarVenta(object, id)
       } else {
         console.log("No se encontro venta"); 
       }        
-
     },
     error : function(jqXHR, status, error)
     {

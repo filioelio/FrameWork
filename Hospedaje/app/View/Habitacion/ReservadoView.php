@@ -50,16 +50,17 @@
 									</div>
 									<div class="caja base-1-3">				
 										<h4 class="fa  fa-user-secret text-blue"> Huesped: <span class="espacio"><?=$habitacion->huesped?></span></h4>
+										<h4><i class="fa fa-user-secret"></i> DNI: <span class="espacio text-blue"><?=$habitacion->dni?></span></h4>	
 										<h4><i class="fa fa-phone text-green"></i> Telefono: <span class="espacio text-blue"><?=$habitacion->telefono?></span></h4>									
 										<h4><i class="fa fa-money text-yellow"></i>  Precio : <span class="text-blue"><?=$habitacion->precio?></span></h4>
 										<h4><i class="fa fa-money text-yellow"></i> Adelanto : <span class="text-blue"><?=$habitacion->adelanto?></span></h4>
 										
 									</div>
 									<div class="caja base-1-3">
-										<h4 class="fa fa-calendar-check-o text-green">fecha reserva: <span class="espacio"><?=$habitacion->fecha_reser?></span></h4>
-										<h4 class="fa fa-calendar text-blue"> ingreso: <span class="espacio"><?=$helper->FormatDate($habitacion->fecha_ingreso)?></span></h4>
-										<h4 class="fa fa-calendar-o text-blue"> salida: <span class="espacio"><?=$helper->FormatDate($habitacion->fecha_salida)?></span></h4>
-										<h4 class="fa fa-file-text text-red"> descripcion: <span class="espacio"><?=$habitacion->descripcion?></span></h4>
+										<h4 class="fa fa-calendar-check-o text-green">FR: <span class="espacio"><?=$helper->FormatDateTime($habitacion->fecha_reser)?></span></h4>
+										<h4 class="fa fa-calendar text-blue"> Ingreso: <span class="espacio"><?=$helper->FormatDate($habitacion->fecha_ingreso)?></span></h4>
+										<h4 class="fa fa-calendar-o text-blue"> Salida: <span class="espacio"><?=$helper->FormatDate($habitacion->fecha_salida)?></span></h4>
+										<h4 class="fa fa-file-text text-red"> Descripcion: <span class="espacio"><?=$habitacion->descripcion?></span></h4>
 									</div>
 									<div class="caja movil-1-6">
 										<?= $helper->Reservado($habitacion->id_habi, $habitacion->dni."*".$habitacion->adelanto, $habitacion->id_reservacion)?>											

@@ -22,9 +22,8 @@ $(document).ready(function()
         
 	$.ajax({
 	    url : root + '/personal/getDataEvento',
-	    data: {},
-	    type : 'POST',
-	    dataType : 'json',
+	    type : 'GET',
+    	dataType : 'json',
 	    success : function(json)
 	    {
 	      if (json.exito) 
@@ -125,16 +124,7 @@ $(document).ready(function()
 			    }
 	   		});
       	}
-    },
-    error : function(jqXHR, status, error)
-    {
-      console.dir(error);
-      console.dir(status);
-      console.dir(jqXHR);
-    },
-    complete: function () {
-      return false;
-    }   
+    }
   }); 
 
 
@@ -190,3 +180,4 @@ function RegistarEvento(title, start, end, color, usuario)
     }  
   }); 
 }
+

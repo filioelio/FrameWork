@@ -87,16 +87,17 @@
 									<h4>DNI : <i><?=$hospedaje->dni?></i></h4>
 									<h4>Telefono : <i><?=$hospedaje->telefono?></i></h4>
 									<h4>Tipo Habitacion : <i><?=$hospedaje->tipo?></i></h4>
+									<h4 style="color: #1a2226 !important";><?=$hospedaje->mensaje?></h4>
 									<h4>Total Dias : <i><?=$hospedaje->cant_dias?></i></h4>
 									<h4>Deuda : <i><?=$hospedaje->deuda?></i></h4>
 								</div> 
 							
 							</div>
 							</div>
-							<div class="box-footer">
+							<!-- <div class="box-footer">
 		                		<span id="cancelar" class="btn btn-sm btn-default btn-flat pull-left">Cancelar</span>
 		                      	<button type="submit" class="btn btn-sm btn-primary btn-flat pull-right">GENERAR REPORTE</button>
-		                    </div> 
+		                    </div>  -->
 						</div>
 					</div>
 					<div class="col-md-4"> 
@@ -165,7 +166,7 @@
 			                    </div> 
 				            </form>
 				        </div>
-		                <div class="box box-primary">
+		                <!-- <div class="box box-primary">
 		                	<div class="box-header with-border">
 		                  		<h3 class="box-title">Formulario de Negociacion</h3>
 		                  		<div class="box-tools pull-right">
@@ -223,7 +224,7 @@
 									</div>
 								</div>
 		                	</div>
-		                </div>
+		                </div> -->
 					</div>
 					
 				</div>

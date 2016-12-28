@@ -12,7 +12,7 @@
 			$table = "reservacion";
 			parent::__construct($table);
 		}
-
+		
 		public function MSAgenda($fecha)
 		{
 			$run = $this->runSql("SELECT (SELECT COUNT(*) FROM eventos WHERE estart = '".$fecha."') as cant, concat(title,' ',datos) as titulo FROM `eventos` WHERE estart = '".$fecha."'");

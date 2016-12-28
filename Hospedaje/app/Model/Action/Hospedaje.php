@@ -13,6 +13,12 @@
 			parent::__construct($table);
 		}
 
+		public function SearchHospedaje($id_habi)
+		{
+			$run = $this->runSql("SELECT ho.fk_id_habitacion AS hab, hu.id_huesped AS dni, CONCAT(hu.nombre, ' ', hu.nombre) AS huesped, ah.fecha, ah.monto, CONCAT(usu.nombre, ' ', usu.apellido) AS usuario FROM auditoriahospedaje ah INNER JOIN hospedaje ho ON ah.fk_id_hospedaje = ho.id_hospedaje INNER JOIN usuario usu ON ah.fk_id_usuario = usu.id_usuario INNER JOIN huesped hu ON ho.fk_id_huesped = hu.id_huesped WHERE  ho.estado = 'Activo' AND ho.fk_id_habitacion = (SELECT id_habitacion FROM habitacion WHERE estado = 'Ocupado' AND id_habitacion = '".$id_habi."')");
+			return $run;
+		}
+
 		public function IngresoTotal($fecha)
 		{
 			$run = $this->runSql("SELECT

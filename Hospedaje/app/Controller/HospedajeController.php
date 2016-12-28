@@ -49,8 +49,6 @@
 			{ 
 				if (MJornada::save($user->getIdUsuario())) {
 					$data = array('exito' => true);
-					$result = MJornada::getIdLast()[0];
-					$_SESSION['RGIngresoToday']['fecha'] = $result->getFechaIngreso();
 				} else {
 					$data = array('exito' => false);
 				}
@@ -210,6 +208,10 @@
 				)
 			);
 
+			if(!empty($_POST) && isset($_POST)){
+				$data['ingresotoday'] = MHospedaje::SearchHospedaje($_POST['id_habi']);
+			}
+
 			$result = MHospedaje::IngresoTotal($fecha->getFechaIngreso())[0];
 
 			$monto1 = $result->hospedaje != NULL ? $result->hospedaje : 0.00 ;
@@ -320,7 +322,12 @@
 			{
 				if (MHuesped::save($_POST['dni'], $_POST['nombre'], $_POST['apellido'], $_POST['origen'], $_POST['telefono'], $_POST['conducta'])) 
 				{	
-					if(MHospedaje::save($_POST['motivo'], "", $_POST['salida'], "", $_POST['new_precio'], $_POST['saldo'], $user->getIdUsuario(), $_POST['dni'], $_POST['id_habi']))
+					if (isset($_POST['adelanto']) && $_POST['adelanto'] > 0)
+						$saldo = $_POST['saldo'] + $_POST['adelanto'];
+					else 
+						$saldo = $_POST['saldo'];
+
+					if(MHospedaje::save($_POST['motivo'], "", $_POST['salida'], "", $_POST['new_precio'], $saldo, $user->getIdUsuario(), $_POST['dni'], $_POST['id_habi']))
 					{
 						$data['mensaje'] 		= "Renta Creado Correctamente";
 						$data['class_mensaje'] 	= "exito";
@@ -341,7 +348,12 @@
 				}
 				else
 				{
-					if(MHospedaje::save($_POST['motivo'], "",  $_POST['salida'], "", $_POST['new_precio'], $_POST['saldo'], $user->getIdUsuario(), $_POST['dni'], $_POST['id_habi']))
+					if (isset($_POST['adelanto']) && $_POST['adelanto'] > 0)
+						$saldo = $_POST['saldo'] + $_POST['adelanto'];
+					else 
+						$saldo = $_POST['saldo'];
+
+					if(MHospedaje::save($_POST['motivo'], "",  $_POST['salida'], "", $_POST['new_precio'], $saldo, $user->getIdUsuario(), $_POST['dni'], $_POST['id_habi']))
 					{
 						$data['mensaje'] 		= "Renta Creado Correctamente";
 						$data['class_mensaje'] 	= "exito";
